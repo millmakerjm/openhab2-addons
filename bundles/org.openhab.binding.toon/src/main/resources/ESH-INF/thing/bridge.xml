@@ -7,8 +7,14 @@
 	<bridge-type id="toonapi">
 		<label>Toon Webaccount</label>
 		<description>
-			The Toon Webaccount is used to connect to your Toon via the Eneco Service Center and
-			uses your 'My Eneco' Username and password.  
+			OpenHAB can access the Toon via the ToonAPI in the cloud. Access to this service
+			is managed by an OAuth2 access tokens. On https://developer.toon.eu/ create 
+			a developer account and register openHAB as application.
+			You will be provided with a "Consumer Key" (= Oauth2 client ID) and a 
+			"Consumer Secret" (= OAuth2 client secret).
+			
+			Enter the key and secret here. When done navigate to http(s)://your_openHAB_host_here/auth-toon/
+			to authorize access to your Toon using your Eneco credentials.
 		</description>
 
 		<config-description>
@@ -17,6 +23,17 @@
 				<label>Authentication</label>
 				<description></description>
 			</parameter-group>
+
+            <parameter name="clientId" type="text" required="true" groupName="auth">
+                <label>Client ID</label>
+                <description>Toon developer client ID (Consumer Key)</description>
+                <default></default>
+            </parameter>
+            <parameter name="clientSecret" type="text" required="true" groupName="auth">
+                <label>Client Secret</label>
+                <description>Toon developer client secret (Consumer Secret)</description>
+                <default></default>
+            </parameter>
 
 			<parameter name="username" type="text" required="true" groupName="auth">
 				<label>Username</label>

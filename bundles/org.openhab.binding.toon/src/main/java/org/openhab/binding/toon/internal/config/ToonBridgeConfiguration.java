@@ -18,7 +18,12 @@ package org.openhab.binding.toon.internal.config;
  * @author Jorg de Jong - Initial contribution
  */
 public class ToonBridgeConfiguration {
+    public String clientId;
+    public String clientSecret;
     public String username;
     public String password;
     public int refreshInterval;
+    public String refreshToken;
+    public String accessToken;
+    public String accessCode;
 }

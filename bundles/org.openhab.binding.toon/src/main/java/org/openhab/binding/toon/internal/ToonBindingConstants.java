@@ -31,6 +31,12 @@ public class ToonBindingConstants {
 
     public static final String BINDING_ID = "toon";
 
+    // Toon OAuth2 variables
+    public static final String TOON_API_URL = "https://api.toon.eu";
+    public static final String TOON_AUTHORIZE_URL = TOON_API_URL + "/authorize";
+    public static final String TOON_TOKEN_URL = TOON_API_URL + "/token";
+    public static final String TOON_CONNECT_URL = "/connect-toon";
+
     // List of all Thing Type UIDs
     public static final ThingTypeUID APIBRIDGE_THING_TYPE = new ThingTypeUID(BINDING_ID, "toonapi");
     public static final ThingTypeUID MAIN_THING_TYPE = new ThingTypeUID(BINDING_ID, "main");

@@ -16,19 +16,25 @@ import static org.openhab.binding.toon.internal.ToonBindingConstants.*;
 
 import java.util.Hashtable;
 
+import org.eclipse.jdt.annotation.NonNullByDefault;
+import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.smarthome.config.discovery.DiscoveryService;
+import org.eclipse.smarthome.core.auth.client.oauth2.OAuthFactory;
 import org.eclipse.smarthome.core.thing.Bridge;
 import org.eclipse.smarthome.core.thing.Thing;
 import org.eclipse.smarthome.core.thing.ThingTypeUID;
 import org.eclipse.smarthome.core.thing.binding.BaseThingHandlerFactory;
 import org.eclipse.smarthome.core.thing.binding.ThingHandler;
 import org.eclipse.smarthome.core.thing.binding.ThingHandlerFactory;
+import org.eclipse.smarthome.io.net.http.HttpClientFactory;
 import org.openhab.binding.toon.internal.discovery.ToonDiscoveryService;
 import org.openhab.binding.toon.internal.handler.ToonBridgeHandler;
 import org.openhab.binding.toon.internal.handler.ToonDisplayHandler;
 import org.openhab.binding.toon.internal.handler.ToonPlugHandler;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.http.HttpService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +48,10 @@ import org.slf4j.LoggerFactory;
 public class ToonHandlerFactory extends BaseThingHandlerFactory {
     private Logger logger = LoggerFactory.getLogger(ToonHandlerFactory.class);
 
+    private @NonNullByDefault({}) OAuthFactory oAuthFactory;
+    private @NonNullByDefault({}) HttpClient httpClient;
+    private @NonNullByDefault({}) HttpService httpService;
+
     private ServiceRegistration<?> discoveryServiceReg;
 
     @Override
@@ -54,7 +64,7 @@ public class ToonHandlerFactory extends BaseThingHandlerFactory {
         logger.debug("createHandler for {} {}", thing, thing.getThingTypeUID());
         ThingTypeUID thingTypeUID = thing.getThingTypeUID();
         if (thingTypeUID.equals(APIBRIDGE_THING_TYPE)) {
-            ToonBridgeHandler bridgeHandler = new ToonBridgeHandler((Bridge) thing);
+            ToonBridgeHandler bridgeHandler = new ToonBridgeHandler((Bridge) thing, oAuthFactory, httpService);
             registerDeviceDiscoveryService(bridgeHandler);
             return bridgeHandler;
         } else if (thingTypeUID.equals(PLUG_THING_TYPE)) {
@@ -83,4 +93,30 @@ public class ToonHandlerFactory extends BaseThingHandlerFactory {
         super.removeHandler(thingHandler);
     }
 
+    @Reference
+    protected void setOAuthFactory(OAuthFactory oAuthFactory) {
+        this.oAuthFactory = oAuthFactory;
+    }
+
+    protected void unsetOAuthFactory(OAuthFactory oAuthFactory) {
+        this.oAuthFactory = null;
+    }
+
+    @Reference
+    protected void setHttpClientFactory(HttpClientFactory httpClientFactory) {
+        this.httpClient = httpClientFactory.getCommonHttpClient();
+    }
+
+    protected void unsetHttpClientFactory(HttpClientFactory httpClientFactory) {
+        this.httpClient = null;
+    }
+
+    @Reference
+    protected void setHttpService(HttpService httpService) {
+        this.httpService = httpService;
+    }
+
+    protected void unsetHttpService(HttpService httpService) {
+        this.httpService = null;
+    }
 }
